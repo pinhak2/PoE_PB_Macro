@@ -4,9 +4,9 @@ import time
 import keyboard
 
 # You have to change
-pb_buff_image_url = 'images\PB_BUFF.PNG'
-pb_full_image_url = 'images\PB_FULL.PNG'
-pb_default_image_url = 'images\PB_DEFAULT.PNG'
+pb_buff_image_url = "images\PB_BUFF.PNG"
+pb_full_image_url = "images\PB_FULL.PNG"
+pb_default_image_url = "images\PB_DEFAULT.PNG"
 
 left_of_skill_button = 1630
 top_of_skill_button = 1015
@@ -19,19 +19,21 @@ width_of_buff_area = 1400
 height_of_buff_area = 70
 
 # May need to change
-pb_keyboard_key = 't'
+pb_keyboard_key = "t"
 
 # Do not change unless you know how to program
 frequency_of_search_in_seconds = 0.25
 skillInCooldown = False
 
 skillUptime = 8.3
-skillCooldown = 0
+skillCooldown = 0.1
 skillDelay = skillUptime + skillCooldown
 
 
 def searchImage(imageLink, left, top, width, height):
-    return pyautogui.locateOnScreen(imageLink, region=(left, top, width, height), grayscale=True, confidence=0.8)
+    return pyautogui.locateOnScreen(
+        imageLink, region=(left, top, width, height), grayscale=True, confidence=0.8
+    )
 
 
 def cooldown():
@@ -48,7 +50,16 @@ def pressPlagueBearerKeyboardKey(activateCooldown=True):
 
 
 def usePlageBearer():
-    if searchImage(pb_full_image_url, left_of_skill_button, top_of_skill_button, width_of_skill_button, height_of_skill_button) == None:
+    if (
+        searchImage(
+            pb_full_image_url,
+            left_of_skill_button,
+            top_of_skill_button,
+            width_of_skill_button,
+            height_of_skill_button,
+        )
+        == None
+    ):
         print("Plague Bearer not ready!")
         time.sleep(frequency_of_search_in_seconds)
         return
@@ -57,22 +68,40 @@ def usePlageBearer():
 
 
 def activatePlagueBearer():
-    if searchImage(pb_buff_image_url, left_of_buff_area, top_of_buff_area, width_of_buff_area, height_of_buff_area) == None:
+    time.sleep(skillCooldown)
+    if (
+        searchImage(
+            pb_buff_image_url,
+            left_of_buff_area,
+            top_of_buff_area,
+            width_of_buff_area,
+            height_of_buff_area,
+        )
+        == None
+    ):
         print("Activating Plague Bearer ....")
         pressPlagueBearerKeyboardKey(False)
-        return
-    print("Plague Bearer is active!")
 
 
 def skillInPlace():
-    if searchImage(pb_default_image_url, left_of_skill_button, top_of_skill_button, width_of_skill_button, height_of_skill_button) == None:
+    if (
+        searchImage(
+            pb_default_image_url,
+            left_of_skill_button,
+            top_of_skill_button,
+            width_of_skill_button,
+            height_of_skill_button,
+        )
+        == None
+    ):
         print("Plague Bearer not in place!")
         return False
-    print("Plague Bearer Bearer ll set!")
+    print("Plague Bearer Bearer is set!")
     return True
 
 
-while not skillInCooldown:
-    usePlageBearer()
+while True:
     if skillInPlace():
-        activatePlagueBearer()
+        while not skillInCooldown:
+            usePlageBearer()
+            activatePlagueBearer()
