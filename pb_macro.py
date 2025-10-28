@@ -1,10 +1,13 @@
-from pyautogui import *
+# Bloco de importação corrigido
 import pyautogui
+from pyautogui import ImageNotFoundException
 import time
 import keyboard
 
+# O resto do seu código continua abaixo...
 # You have to change
 pb_buff_image_url = "images\PB_BUFF.PNG"
+# ...etc
 pb_full_image_url = "images\PB_FULL.PNG"
 pb_default_image_url = "images\PB_DEFAULT.PNG"
 
@@ -31,9 +34,13 @@ skillDelay = skillUptime + skillCooldown
 
 
 def searchImage(imageLink, left, top, width, height):
-    return pyautogui.locateOnScreen(
-        imageLink, region=(left, top, width, height), grayscale=True, confidence=0.8
-    )
+    try:
+        return pyautogui.locateOnScreen(
+            imageLink, region=(left, top, width, height), grayscale=True, confidence=0.8
+        )
+    except ImageNotFoundException:
+        # Se o pyautogui falhar (nao encontrar), retorna None em vez de quebrar
+        return None
 
 
 def cooldown():
